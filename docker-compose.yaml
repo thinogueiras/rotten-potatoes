@@ -1,0 +1,33 @@
+version: '3'
+
+networks:
+  rotten-potatoes:
+    driver: bridge
+
+volumes:
+  mongo-vol:
+
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-vol:/data/db
+    networks:
+      - rotten-potatoes
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongouser
+      MONGO_INITDB_ROOT_PASSWORD: mongopwd
+
+  webApp:
+    image: thinogueiras/rotten-potatoes:v1
+    ports:
+      - 5000:5000
+    networks:
+      - rotten-potatoes
+    environment:
+      MONGODB_HOST: mongodb
+      MONGODB_USERNAME: mongouser
+      MONGODB_PASSWORD: mongopwd
+
